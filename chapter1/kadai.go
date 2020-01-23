@@ -1,5 +1,15 @@
 package chapter1
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/apbgo/go-study-group/chapter1/lib"
+)
+
 // Calc opには+,-,×,÷の4つが渡ってくることを想定してxとyについて計算して返却(正常時はerrorはnilでよい)
 // 想定していないopが渡って来た時には0とerrorを返却
 func Calc(op string, x, y int) (int, error) {
@@ -9,8 +19,21 @@ func Calc(op string, x, y int) (int, error) {
 	// https://golang.org/pkg/fmt/#Errorf
 
 	// TODO Q1
+	var result int
+	switch op {
+	case "+":
+		result = x + y
+	case "-":
+		result = x - y
+	case "×":
+		result = x * y
+	case "÷":
+		result = x / y
+	default:
+		return 0, fmt.Errorf("invalid op=%s", op)
+	}
 
-	return 0, nil
+	return result, nil
 }
 
 // StringEncode 引数strの長さが5以下の時キャメルケースにして返却、それ以外であればスネークケースにして返却
@@ -19,16 +42,21 @@ func StringEncode(str string) string {
 	// chapter1/libのToCamelとToSnakeを使うこと
 
 	// TODO Q2
-
-	return ""
+	if len(str) < 6 {
+		return lib.ToCamel(str)
+	}
+	return lib.ToSnake(str)
 }
 
 // Sqrt 数値xが与えられたときにz²が最もxに近い数値zを返却
 func Sqrt(x float64) float64 {
 
 	// TODO Q3
-
-	return 0
+	z := 1.0
+	for i := 0; i < 10; i++ {
+		z -= (z*z - x) / (2 * z)
+	}
+	return z
 }
 
 // Pyramid x段のピラミッドを文字列にして返却
@@ -36,11 +64,21 @@ func Sqrt(x float64) float64 {
 // （x<=0の時は"error"を返却）
 func Pyramid(x int) string {
 	// ヒント：string <-> intにはstrconvを使う
-	// int -> stringはstrconv.Ioa() https://golang.org/pkg/strconv/#Itoa
+	// int -> stringはstrconv.Itoa() https://golang.org/pkg/strconv/#Itoa
 
 	// TODO Q4
-
-	return ""
+	if x <= 0 {
+		return "error"
+	}
+	var (
+		tmp_list []string
+		tmp_str  string
+	)
+	for i := 1; i <= x; i++ {
+		tmp_str += strconv.Itoa(i)
+		tmp_list = append(tmp_list, tmp_str)
+	}
+	return strings.Join(tmp_list, "\n")
 }
 
 // StringSum x,yをintにキャストし合計値を返却 (正常終了時、errorはnilでよい)
@@ -51,8 +89,15 @@ func StringSum(x, y string) (int, error) {
 	// string -> intはstrconv.Atoi() https://golang.org/pkg/strconv/#Atoi
 
 	// TODO Q5
-
-	return 0, nil
+	xi, err := strconv.Atoi(x)
+	if err != nil {
+		return 0, err
+	}
+	yi, err := strconv.Atoi(y)
+	if err != nil {
+		return 0, err
+	}
+	return xi + yi, nil
 }
 
 // SumFromFileNumber ファイルを開いてそこに記載のある数字の和を返却
@@ -61,6 +106,24 @@ func SumFromFileNumber(filePath string) (int, error) {
 	// bufio.Scannerなどで１行ずつ読み込むと良い
 
 	// TODO Q6 オプション
+	f, err := os.Open(filePath)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+	s := bufio.NewScanner(f)
 
-	return 0, nil
+	var result int
+	for s.Scan() {
+		i, err := strconv.Atoi(s.Text())
+		if err != nil {
+			return 0, err
+		}
+		result += i
+	}
+	if err != nil {
+		return 0, err
+	}
+
+	return result, nil
 }
