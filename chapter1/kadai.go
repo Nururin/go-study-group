@@ -44,9 +44,8 @@ func StringEncode(str string) string {
 	// TODO Q2
 	if len(str) < 6 {
 		return lib.ToCamel(str)
-	} else {
-		return lib.ToSnake(str)
 	}
+	return lib.ToSnake(str)
 }
 
 // Sqrt 数値xが与えられたときにz²が最もxに近い数値zを返却
