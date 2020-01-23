@@ -42,14 +42,11 @@ func StringEncode(str string) string {
 	// chapter1/libのToCamelとToSnakeを使うこと
 
 	// TODO Q2
-	var result string
 	if len(str) < 6 {
-		result = lib.ToCamel(str)
+		return lib.ToCamel(str)
 	} else {
-		result = lib.ToSnake(str)
+		return lib.ToSnake(str)
 	}
-
-	return result
 }
 
 // Sqrt 数値xが与えられたときにz²が最もxに近い数値zを返却
@@ -74,8 +71,10 @@ func Pyramid(x int) string {
 	if x <= 0 {
 		return "error"
 	}
-	var tmp_list []string
-	var tmp_str string
+	var (
+		tmp_list []string
+		tmp_str  string
+	)
 	for i := 1; i <= x; i++ {
 		tmp_str += strconv.Itoa(i)
 		tmp_list = append(tmp_list, tmp_str)
@@ -122,6 +121,9 @@ func SumFromFileNumber(filePath string) (int, error) {
 			return 0, err
 		}
 		result += i
+	}
+	if err != nil {
+		return 0, err
 	}
 
 	return result, nil
