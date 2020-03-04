@@ -20,11 +20,11 @@ func (c Cat) Crow() string {
 // Catの場合はCrowを実行した結果
 // その他の場合はerrorを返却してください。
 func Kadai3(x interface{}) (string, error) {
-	switch x.(type) {
+	switch v := x.(type) {
 	case Dog:
-		return x.(Dog).Bark(), nil
+		return v.Bark(), nil
 	case Cat:
-		return x.(Cat).Crow(), nil
+		return v.Crow(), nil
 	default:
 		return "", fmt.Errorf("invalid op=%s", x)
 	}
